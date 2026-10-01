@@ -39,6 +39,9 @@ public final class KeenClothScreen {
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
                 .setTitle(KeenText.trans("gui.keenlib.title", "KeenLib"));
+        // 用「左侧分类树」布局，而不是把分类画成顶部的标签按钮
+        builder.setGlobalized(true);
+        builder.setGlobalizedExpanded(true);
         ConfigEntryBuilder entries = builder.entryBuilder();
 
         buildNoticeCategory(builder, entries);
@@ -116,7 +119,8 @@ public final class KeenClothScreen {
         switch (entry.kind()) {
             case BOOLEAN: {
                 KeenConfigEntry<Boolean> typed = (KeenConfigEntry<Boolean>) entry;
-                var toggle = entries.startBooleanToggle(typed.label(), typed.defaultValue())
+                // 初始值必须是「当前配置文件里的值」，用 defaultValue() 会让界面永远显示默认值
+                var toggle = entries.startBooleanToggle(typed.label(), typed.get())
                         .setDefaultValue(typed.defaultValue())
                         .setSaveConsumer(typed::set);
                 if (!typed.tooltip().isEmpty()) {
@@ -126,7 +130,7 @@ public final class KeenClothScreen {
             }
             case INT: {
                 KeenConfigEntry<Integer> typed = (KeenConfigEntry<Integer>) entry;
-                var slider = entries.startIntSlider(typed.label(), typed.defaultValue(), typed.min(), typed.max())
+                var slider = entries.startIntSlider(typed.label(), typed.get(), typed.min(), typed.max())
                         .setDefaultValue(typed.defaultValue())
                         .setSaveConsumer(typed::set);
                 if (!typed.tooltip().isEmpty()) {
@@ -136,7 +140,7 @@ public final class KeenClothScreen {
             }
             default: {
                 KeenConfigEntry<String> typed = (KeenConfigEntry<String>) entry;
-                var field = entries.startStrField(typed.label(), typed.defaultValue())
+                var field = entries.startStrField(typed.label(), typed.get())
                         .setDefaultValue(typed.defaultValue())
                         .setSaveConsumer(typed::set);
                 if (!typed.tooltip().isEmpty()) {
