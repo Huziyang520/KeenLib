@@ -48,8 +48,8 @@ Neither is declared as a dependency (`depends`); both are `compileOnly` at build
 
 1. Install a Minecraft 26.3 instance with the matching loader.
 2. Put the jar for your loader into the instance `mods` folder:
-   - Fabric: `keenlib-0.2.1fix-fabric-26.3.jar`
-   - NeoForge: `keenlib-0.2.1fix-neoforge-26.3.jar`
+   - Fabric: `keenlib-0.2.2-fabric-26.3.jar`
+   - NeoForge: `keenlib-0.2.2-neoforge-26.3.jar`
 3. Optional: install **Cloth Config** to get a config screen, plus **Mod Menu** on Fabric for a config button.
 
 ### For Developers — config
@@ -146,8 +146,8 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 
 1. 安装对应加载器版本的 Minecraft 26.3 实例。
 2. 把对应加载器端的 jar 放入实例 `mods` 目录：
-   - Fabric：`keenlib-0.2.1fix-fabric-26.3.jar`
-   - NeoForge：`keenlib-0.2.1fix-neoforge-26.3.jar`
+   - Fabric：`keenlib-0.2.2-fabric-26.3.jar`
+   - NeoForge：`keenlib-0.2.2-neoforge-26.3.jar`
 3. 可选：装 **Cloth Config** 以获得配置界面；Fabric 端可再装 **Mod Menu** 获得配置入口。
 
 ### 面向开发者 —— 配置
