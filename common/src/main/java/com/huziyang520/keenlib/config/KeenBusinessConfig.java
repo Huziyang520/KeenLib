@@ -51,7 +51,7 @@ public final class KeenBusinessConfig {
     public KeenBusinessConfig booleanToggle(String key, boolean defaultValue, Component label, Component... tooltip) {
         entries.add(KeenConfigEntry.bool(key, label, defaultValue, List.of(tooltip),
                 () -> file.getBoolean(key, defaultValue),
-                value -> file.set(key, value)));
+                value -> write(key, value)));
         return this;
     }
 
@@ -59,7 +59,7 @@ public final class KeenBusinessConfig {
     public KeenBusinessConfig intSlider(String key, int defaultValue, int min, int max, Component label, Component... tooltip) {
         entries.add(KeenConfigEntry.integer(key, label, defaultValue, min, max, List.of(tooltip),
                 () -> file.getInt(key, defaultValue),
-                value -> file.set(key, value)));
+                value -> write(key, value)));
         return this;
     }
 
@@ -67,8 +67,25 @@ public final class KeenBusinessConfig {
     public KeenBusinessConfig stringField(String key, String defaultValue, Component label, Component... tooltip) {
         entries.add(KeenConfigEntry.string(key, label, defaultValue, List.of(tooltip),
                 () -> file.getString(key, defaultValue),
-                value -> file.set(key, value)));
+                value -> write(key, value)));
         return this;
+    }
+
+    /**
+     * 写值并**立即落盘**。
+     *
+     * <p>不依赖「保存按钮 → savingRunnable」的顺序：不同版本的 Cloth Config 里，savingRunnable 与各配置项
+     * save 回调的先后并不一致，先跑 runnable 就会把旧值写进文件，表现为「改了又变回去」。
+     */
+    private void write(String key, Object value) {
+        if (value instanceof Boolean bool) {
+            file.set(key, bool);
+        } else if (value instanceof Number number) {
+            file.set(key, number);
+        } else if (value instanceof String text) {
+            file.set(key, text);
+        }
+        file.save();
     }
 
     /** 补齐缺失的默认值并写回磁盘。 */

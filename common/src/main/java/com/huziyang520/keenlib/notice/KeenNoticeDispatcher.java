@@ -58,7 +58,7 @@ public final class KeenNoticeDispatcher {
         StringBuilder updated = new StringBuilder(seen);
         int sent = 0;
         for (KeenNotice notice : KeenNoticeApi.notices()) {
-            if (!notice.enabledByDefault()) {
+            if (!KeenNoticePreferences.isEnabled(notice.owner(), notice.enabledByDefault())) {
                 continue;
             }
             boolean once = notice.mode() == KeenNoticeMode.ONCE_PER_WORLD;

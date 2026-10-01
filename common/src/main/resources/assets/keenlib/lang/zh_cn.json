@@ -1,0 +1,9 @@
+{
+  "gui.keenlib.title": "KeenLib",
+  "gui.keenlib.category.notices": "业务模组通知设置",
+  "gui.keenlib.category.business": "纯客户端业务模组启用设置",
+  "gui.keenlib.notices.none": "没有业务模组注册进入世界提示",
+  "gui.keenlib.notices.enable": "启用进入世界提示",
+  "gui.keenlib.notices.enable.tooltip": "关闭后，进入世界时不再显示该模组的提示。",
+  "gui.keenlib.business.none": "没有依赖 KeenLib 的纯客户端模组"
+}

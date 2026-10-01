@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 轻量 JSON 配置封装：每个模组一个实例，读写实例 config 目录下的单个 JSON 文件。
@@ -29,12 +31,22 @@ public final class KeenConfig {
         this.root = root;
     }
 
+    private static final Map<Path, KeenConfig> CACHE = new HashMap<>();
+
     /**
      * 加载（或创建）{@code <config目录>/<modId>.json}。文件缺失或损坏时返回空配置，损坏会记录日志但不会抛出。
+     *
+     * <p><b>同一路径只返回同一个实例</b>：否则不同调用方各自持有一份内存副本，界面改了 A 副本、业务代码读 B 副本，
+     * 就会出现「改了值却不生效 / 重新打开又变回去」的问题。
      */
-    public static KeenConfig create(String modId) {
+    public static synchronized KeenConfig create(String modId) {
 
         Path file = Services.PLATFORM.getConfigDir().resolve(modId + ".json");
+        return CACHE.computeIfAbsent(file, KeenConfig::load);
+    }
+
+    private static KeenConfig load(Path file) {
+
         JsonObject root = new JsonObject();
         if (Files.exists(file)) {
             try {

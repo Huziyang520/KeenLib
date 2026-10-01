@@ -34,6 +34,11 @@ public final class KeenConfigApi {
         return BUSINESS.values();
     }
 
+    /** 查某个 modId 是否注册过配置组，没有则返回 {@code null}。 */
+    public static KeenBusinessConfig find(String modId) {
+        return BUSINESS.get(modId);
+    }
+
     /** 是否已有业务模组注册（没有时配置界面显示提示）。 */
     public static boolean hasBusinesses() {
         return !BUSINESS.isEmpty();

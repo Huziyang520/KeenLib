@@ -24,6 +24,11 @@ public interface IPlatformHelper {
      */
     Path getConfigDir();
 
+    /**
+     * 指定 modId 的显示名（元数据里的 name / displayName）；取不到时返回 modId 本身。
+     */
+    String getModName(String modId);
+
     default String getEnvironmentName() {
 
         return isDevelopmentEnvironment() ? "development" : "production";

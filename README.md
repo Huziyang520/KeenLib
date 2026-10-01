@@ -15,7 +15,9 @@ KeenLib provides functions on **both the client and the server**, and may be **i
 | Platform abstraction | `platform.Services.PLATFORM` / `platform.services.IPlatformHelper` | Unified Fabric / NeoForge differences via `ServiceLoader`: platform name, mod-loaded check, dev-environment check, `config` directory |
 | JSON config | `config.KeenConfig` | One instance per mod, reads/writes `config/<modId>.json`; typed `get*` / `set` with fault-tolerant loading |
 | Business config registry | `config.KeenConfigApi` / `KeenBusinessConfig` | Business mods register their own options in a few lines; KeenLib renders them. **No Cloth Config types are used by business mods** |
-| Config screen (optional) | `client.KeenConfigScreenHook` | Renders everything with **Cloth Config** when it is installed; without Cloth Config there is simply no config screen |
+| Config screen (optional) | `client.KeenConfigScreenHook` | Renders everything with **Cloth Config** when installed. Two categories: **Business mod notice settings** (per-mod join-notice switches) and **Client-side business mod settings** (each mod's own options). Without Cloth Config there is simply no config screen |
+| Notice settings | `notice.KeenNoticePreferences` | Per-mod on/off for join notices, edited from the config screen, stored in `config/keenlib.json` |
+| Languages | `assets/keenlib/lang` | The config screen is fully localized (`en_us`, `zh_cn`); business mods supply their own keys |
 | GUI helpers | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | Shared abstraction for "ESC saves and exits", reused by feature mods via Mixin |
 | Join notices | `notice.KeenNoticeApi` | A mod registers a chat message; KeenLib sends it locally when the player enters a world (`EVERY_JOIN` or `ONCE_PER_WORLD`) |
 | Localization | `text.KeenText` | Translatable component factory with `fallback` text |
@@ -46,8 +48,8 @@ Neither is declared as a dependency (`depends`); both are `compileOnly` at build
 
 1. Install a Minecraft 26.3 instance with the matching loader.
 2. Put the jar for your loader into the instance `mods` folder:
-   - Fabric: `keenlib-0.2.0-fabric-26.3.jar`
-   - NeoForge: `keenlib-0.2.0-neoforge-26.3.jar`
+   - Fabric: `keenlib-0.2.1-fabric-26.3.jar`
+   - NeoForge: `keenlib-0.2.1-neoforge-26.3.jar`
 3. Optional: install **Cloth Config** to get a config screen, plus **Mod Menu** on Fabric for a config button.
 
 ### For Developers — config
@@ -111,7 +113,9 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 | 平台抽象 | `platform.Services.PLATFORM` / `platform.services.IPlatformHelper` | 用 ServiceLoader 统一 Fabric / NeoForge 差异：平台名、模组加载判定、开发环境判定、`config` 目录 |
 | JSON 配置 | `config.KeenConfig` | 每个模组一个实例，读写 `config/<modId>.json`；带类型化 `get*` / `set` 与容错加载 |
 | 业务配置注册 | `config.KeenConfigApi` / `KeenBusinessConfig` | 业务模组几行代码即可登记自己的选项，由 KeenLib 负责渲染；**业务模组不使用任何 Cloth Config 类型** |
-| 配置界面（可选） | `client.KeenConfigScreenHook` | 装了 **Cloth Config** 时渲染界面；不装则没有配置界面 |
+| 配置界面（可选） | `client.KeenConfigScreenHook` | 装了 **Cloth Config** 时渲染界面。左侧两个分类：**业务模组通知设置**（各模组的进入世界提示开关）与**纯客户端业务模组启用设置**（各模组自己的选项）；不装则没有配置界面 |
+| 通知开关 | `notice.KeenNoticePreferences` | 每个模组的进入世界提示开关，在配置界面里改，存 `config/keenlib.json` |
+| 多语言 | `assets/keenlib/lang` | 配置界面文案全部走语言键（内置 `en_us` / `zh_cn`）；业务模组提供自己的键 |
 | GUI 辅助 | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | 「ESC 即保存并退出」的统一抽象，供功能模组以 Mixin 复用 |
 | 进入世界提示 | `notice.KeenNoticeApi` | 注册一条聊天框提示，玩家进入世界时由客户端本地发送（`EVERY_JOIN` / `ONCE_PER_WORLD`） |
 | 本地化 | `text.KeenText` | 可翻译组件创建，支持 `fallback` 兜底文案 |
@@ -142,8 +146,8 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 
 1. 安装对应加载器版本的 Minecraft 26.3 实例。
 2. 把对应加载器端的 jar 放入实例 `mods` 目录：
-   - Fabric：`keenlib-0.2.0-fabric-26.3.jar`
-   - NeoForge：`keenlib-0.2.0-neoforge-26.3.jar`
+   - Fabric：`keenlib-0.2.1-fabric-26.3.jar`
+   - NeoForge：`keenlib-0.2.1-neoforge-26.3.jar`
 3. 可选：装 **Cloth Config** 以获得配置界面；Fabric 端可再装 **Mod Menu** 获得配置入口。
 
 ### 面向开发者 —— 配置

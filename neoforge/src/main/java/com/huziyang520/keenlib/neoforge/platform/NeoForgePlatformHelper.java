@@ -32,4 +32,12 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
         return FMLPaths.CONFIGDIR.get();
     }
+
+    @Override
+    public String getModName(String modId) {
+
+        return ModList.get().getModContainerById(modId)
+                .map(container -> container.getModInfo().getDisplayName())
+                .orElse(modId);
+    }
 }

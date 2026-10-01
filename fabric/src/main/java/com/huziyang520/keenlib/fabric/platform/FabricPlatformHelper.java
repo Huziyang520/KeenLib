@@ -29,4 +29,12 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
         return FabricLoader.getInstance().getConfigDir();
     }
+
+    @Override
+    public String getModName(String modId) {
+
+        return FabricLoader.getInstance().getModContainer(modId)
+                .map(container -> container.getMetadata().getName())
+                .orElse(modId);
+    }
 }

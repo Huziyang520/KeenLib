@@ -51,4 +51,15 @@ public final class KeenNoticeApi {
     public static List<KeenNotice> notices() {
         return Collections.unmodifiableList(NOTICES);
     }
+
+    /** 注册过提示的模组 id（去重，按首次注册顺序）。 */
+    public static List<String> owners() {
+        List<String> owners = new ArrayList<>();
+        for (KeenNotice notice : NOTICES) {
+            if (!owners.contains(notice.owner())) {
+                owners.add(notice.owner());
+            }
+        }
+        return Collections.unmodifiableList(owners);
+    }
 }

@@ -1,0 +1,9 @@
+{
+  "gui.keenlib.title": "KeenLib",
+  "gui.keenlib.category.notices": "Business mod notice settings",
+  "gui.keenlib.category.business": "Client-side business mod settings",
+  "gui.keenlib.notices.none": "No business mod has registered a join notice.",
+  "gui.keenlib.notices.enable": "Enable join notices",
+  "gui.keenlib.notices.enable.tooltip": "When off, this mod's messages are not shown when you enter a world.",
+  "gui.keenlib.business.none": "No client-side mod depends on KeenLib."
+}

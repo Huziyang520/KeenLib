@@ -12,15 +12,24 @@ import net.minecraft.client.gui.screens.Screen;
  */
 public final class KeenConfigScreenHook {
 
-    /** Cloth Config 的 mod id（Fabric 与 NeoForge 一致）。 */
-    public static final String CLOTH_CONFIG_MOD_ID = "cloth-config";
+    /**
+     * Cloth Config 的 mod id。
+     *
+     * <p>**两端不一样**：Fabric 上是 `cloth-config`，NeoForge 上因 NeoForge 的 modId 不允许连字符而是
+     * `cloth_config`。只按其中一个判断会导致另一端「装了也认不出来」。
+     */
+    public static final String CLOTH_CONFIG_FABRIC_ID = "cloth-config";
+
+    /** NeoForge 侧的 Cloth Config mod id。 */
+    public static final String CLOTH_CONFIG_NEOFORGE_ID = "cloth_config";
 
     private KeenConfigScreenHook() {
     }
 
-    /** 是否安装了 Cloth Config。 */
+    /** 是否安装了 Cloth Config（两端 id 都检查）。 */
     public static boolean isAvailable() {
-        return Services.PLATFORM.isModLoaded(CLOTH_CONFIG_MOD_ID);
+        return Services.PLATFORM.isModLoaded(CLOTH_CONFIG_FABRIC_ID)
+                || Services.PLATFORM.isModLoaded(CLOTH_CONFIG_NEOFORGE_ID);
     }
 
     /**
