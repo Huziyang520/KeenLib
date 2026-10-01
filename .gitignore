@@ -29,6 +29,9 @@ runs
 # multiloader / buildlike
 libs/
 build_log.txt
+
+# project docs (local only, not published)
+项目管理与决策记录.md
 classes/
 hs_err_*.log
 *.hprof
