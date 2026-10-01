@@ -3,6 +3,18 @@ plugins {
     id 'maven-publish'
 }
 
+// 可选联动依赖的来源仓库（Cloth Config API / Mod Menu）
+repositories {
+    maven {
+        name = 'Shedaniel'
+        url = uri('https://maven.shedaniel.me/')
+    }
+    maven {
+        name = 'TerraformersMC'
+        url = uri('https://maven.terraformersmc.com/releases/')
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
@@ -61,7 +73,9 @@ processResources {
             'description'                  : project.description,
             'neoforge_version'             : neoforge_version,
             'credits'                      : credits,
-            'java_version'                 : java_version
+            'java_version'                 : java_version,
+            'cloth_config_version'         : cloth_config_version,
+            'modmenu_version'              : modmenu_version
     ]
 
     var jsonExpandProps = expandProps.collectEntries {

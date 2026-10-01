@@ -20,7 +20,14 @@
         ],
         "client": [
             "com.huziyang520.keenlib.fabric.KeenLibFabric"
+        ],
+        "modmenu": [
+            "com.huziyang520.keenlib.fabric.ModMenuIntegration"
         ]
+    },
+    "recommends": {
+        "cloth-config": "*",
+        "modmenu": "*"
     },
     "mixins": [
         "${mod_id}.mixins.json",
