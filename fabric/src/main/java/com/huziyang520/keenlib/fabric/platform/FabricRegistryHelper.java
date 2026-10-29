@@ -62,13 +62,25 @@ public class FabricRegistryHelper implements IRegistryHelper {
     public Holder<CreativeModeTab> tab(String modId, String path, Component title, Supplier<ItemStack> icon,
                                        KeenTabEntries entries) {
         Identifier id = Identifier.fromNamespaceAndPath(modId, path);
-        CreativeModeTab tab = CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+        CreativeModeTab tab = tabBuilder()
                 .title(title)
                 .icon(icon)
                 .displayItems((parameters, output) -> entries.addTo(output::accept))
                 .build();
         CreativeModeTab registered = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, id, tab);
         return BuiltInRegistries.CREATIVE_MODE_TAB.wrapAsHolder(registered);
+    }
+
+    /**
+     * Fabric API places custom tabs after the vanilla ones; without it fall back to the vanilla builder.
+     */
+    private static CreativeModeTab.Builder tabBuilder() {
+        try {
+            Class<?> factory = Class.forName("net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab");
+            return (CreativeModeTab.Builder) factory.getMethod("builder").invoke(null);
+        } catch (Throwable ignored) {
+            return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0);
+        }
     }
 
     @SuppressWarnings("unchecked")
