@@ -20,6 +20,7 @@ KeenLib provides functions on **both the client and the server**, and may be **i
 | Languages | `assets/keenlib/lang` | The config screen is fully localized (`en_us`, `zh_cn`); business mods supply their own keys |
 | GUI helpers | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | Shared abstraction for "ESC saves and exits", reused by feature mods via Mixin |
 | Join notices | `notice.KeenNoticeApi` | A mod registers a chat message; KeenLib sends it locally when the player enters a world (`EVERY_JOIN` or `ONCE_PER_WORLD`) |
+| Content registration | `registry.KeenRegistry` / `platform.services.IRegistryHelper` | Items, sound events, data component types and creative tabs registered the same way on Fabric and NeoForge |
 | Localization | `text.KeenText` | Translatable component factory with `fallback` text |
 | Logging | `Constants.LOG` | Single SLF4J logger entry |
 
@@ -48,8 +49,8 @@ Neither is declared as a dependency (`depends`); both are `compileOnly` at build
 
 1. Install a Minecraft 26.3 instance with the matching loader.
 2. Put the jar for your loader into the instance `mods` folder:
-   - Fabric: `keenlib-0.2.2-fabric-26.3.jar`
-   - NeoForge: `keenlib-0.2.2-neoforge-26.3.jar`
+   - Fabric: `keenlib-0.3.0-fabric-26.3.jar`
+   - NeoForge: `keenlib-0.3.0-neoforge-26.3.jar`
 3. Optional: install **Cloth Config** to get a config screen, plus **Mod Menu** on Fabric for a config button.
 
 ### For Developers — config
@@ -78,16 +79,6 @@ KeenNoticeApi.register(
 
 Notices are sent **locally on the client**, so client-only mods can use them too. `ONCE_PER_WORLD` remembers each world save / server address in `config/keenlib/notices.json`.
 
-### Building
-
-Requires JDK 25.
-
-```bash
-./gradlew :fabric:jar :neoforge:jar
-```
-
-Output goes to `<module>/build/libs/` as `<modId>-<version>-<loader>-<minecraft_version>.jar`.
-
 ### Links
 
 - GitHub: <https://github.com/Huziyang520/KeenLib>
@@ -96,7 +87,7 @@ Output goes to `<module>/build/libs/` as `<modId>-<version>-<loader>-<minecraft_
 
 ### License
 
-Released under the [MIT License](LICENSE), Copyright (c) 2026 Huziyang520.
+Released under [CC0 1.0 Universal](LICENSE).
 
 ---
 
@@ -118,6 +109,7 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 | 多语言 | `assets/keenlib/lang` | 配置界面文案全部走语言键（内置 `en_us` / `zh_cn`）；业务模组提供自己的键 |
 | GUI 辅助 | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | 「ESC 即保存并退出」的统一抽象，供功能模组以 Mixin 复用 |
 | 进入世界提示 | `notice.KeenNoticeApi` | 注册一条聊天框提示，玩家进入世界时由客户端本地发送（`EVERY_JOIN` / `ONCE_PER_WORLD`） |
+| 内容注册 | `registry.KeenRegistry` / `platform.services.IRegistryHelper` | 物品、声音事件、数据组件与创造模式标签页在 Fabric / NeoForge 上用同一套调用注册 |
 | 本地化 | `text.KeenText` | 可翻译组件创建，支持 `fallback` 兜底文案 |
 | 日志 | `Constants.LOG` | 统一 SLF4J 日志入口 |
 
@@ -146,8 +138,8 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 
 1. 安装对应加载器版本的 Minecraft 26.3 实例。
 2. 把对应加载器端的 jar 放入实例 `mods` 目录：
-   - Fabric：`keenlib-0.2.2-fabric-26.3.jar`
-   - NeoForge：`keenlib-0.2.2-neoforge-26.3.jar`
+   - Fabric：`keenlib-0.3.0-fabric-26.3.jar`
+   - NeoForge：`keenlib-0.3.0-neoforge-26.3.jar`
 3. 可选：装 **Cloth Config** 以获得配置界面；Fabric 端可再装 **Mod Menu** 获得配置入口。
 
 ### 面向开发者 —— 配置
@@ -176,16 +168,6 @@ KeenNoticeApi.register(
 
 提示由**客户端本地发送**，因此纯客户端模组也能使用；`ONCE_PER_WORLD` 会按世界（存档名 / 服务器地址）记录在 `config/keenlib/notices.json`。
 
-### 构建
-
-前置：JDK 25。
-
-```bash
-./gradlew :fabric:jar :neoforge:jar
-```
-
-产物输出在 `<module>/build/libs/`，命名规则：`<modId>-<version>-<loader>-<minecraft_version>.jar`。
-
 ### 链接
 
 - GitHub：<https://github.com/Huziyang520/KeenLib>
@@ -194,4 +176,4 @@ KeenNoticeApi.register(
 
 ### 许可证
 
-本项目基于 [MIT License](LICENSE) 发布，Copyright (c) 2026 Huziyang520。
+本项目基于 [CC0 1.0 Universal](LICENSE) 发布。

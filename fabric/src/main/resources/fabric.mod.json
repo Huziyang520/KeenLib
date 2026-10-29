@@ -8,7 +8,7 @@
         "${mod_author}"
     ],
     "contact": {
-        "homepage": "https://github.com/Huziyang520/KeenLib",
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/keenlib",
         "issues": "https://github.com/Huziyang520/KeenLib/issues"
     },
     "license": "${license}",
