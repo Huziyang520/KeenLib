@@ -87,7 +87,7 @@ public final class KeenClothScreen {
     /** 左侧分类：纯客户端业务模组启用设置。 */
     private static void buildBusinessCategory(ConfigBuilder builder, ConfigEntryBuilder entries) {
         ConfigCategory category = builder.getOrCreateCategory(
-                KeenText.trans("gui.keenlib.category.business", "Client-side business mod settings"));
+                KeenText.trans("gui.keenlib.category.business", "Client settings"));
 
         if (!KeenConfigApi.hasBusinesses()) {
             category.addEntry(entries.startTextDescription(

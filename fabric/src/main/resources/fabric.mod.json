@@ -8,7 +8,7 @@
         "${mod_author}"
     ],
     "contact": {
-        "homepage": "https://www.curseforge.com/minecraft/mc-mods/keenlib",
+        "homepage": "https://github.com/Huziyang520/KeenLib",
         "issues": "https://github.com/Huziyang520/KeenLib/issues"
     },
     "license": "${license}",
@@ -33,7 +33,10 @@
         "modmenu": {
             "badges": [
                 "library"
-            ]
+            ],
+            "links": {
+                "modmenu.keenlib.backup": "https://issue.mengcai.online/"
+            }
         }
     },
     "mixins": [
