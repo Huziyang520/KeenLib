@@ -87,7 +87,7 @@ Notices are sent **locally on the client**, so client-only mods can use them too
 
 ### License
 
-Source code is released under [CC0 1.0 Universal](LICENSE). The same terms apply to the bundled assets (icon, language files), which are all original.
+Released under [CC0 1.0 Universal](LICENSE).
 
 ---
 
@@ -176,4 +176,4 @@ KeenNoticeApi.register(
 
 ### 许可证
 
-源码以 [CC0 1.0 Universal](LICENSE) 发布；随包资源（图标、语言文件）均为原创，同样适用该许可。
+本项目基于 [CC0 1.0 Universal](LICENSE) 发布。
