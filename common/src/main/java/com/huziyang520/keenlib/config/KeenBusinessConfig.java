@@ -63,6 +63,21 @@ public final class KeenBusinessConfig {
         return this;
     }
 
+    public KeenBusinessConfig doubleSlider(String key, double defaultValue, double min, double max, Component label,
+                                           Component... tooltip) {
+        entries.add(KeenConfigEntry.decimal(key, label, defaultValue, min, max, List.of(tooltip),
+                () -> file.getDouble(key, defaultValue),
+                value -> write(key, value)));
+        return this;
+    }
+
+    public KeenBusinessConfig dependsOn(String otherKey) {
+        if (!entries.isEmpty()) {
+            entries.get(entries.size() - 1).setEnabled(() -> file.getBoolean(otherKey, true));
+        }
+        return this;
+    }
+
     /** 新增一个文本输入框。 */
     public KeenBusinessConfig stringField(String key, String defaultValue, Component label, Component... tooltip) {
         entries.add(KeenConfigEntry.string(key, label, defaultValue, List.of(tooltip),

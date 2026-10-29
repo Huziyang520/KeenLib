@@ -73,6 +73,12 @@ public final class KeenConfig {
         return element != null && element.isJsonPrimitive() ? element.getAsInt() : fallback;
     }
 
+    public double getDouble(String key, double fallback) {
+
+        JsonElement element = root.get(key);
+        return element != null && element.isJsonPrimitive() ? element.getAsDouble() : fallback;
+    }
+
     public String getString(String key, String fallback) {
 
         JsonElement element = root.get(key);

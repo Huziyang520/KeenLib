@@ -30,7 +30,7 @@ tasks.withType(ProcessResources).configureEach {
 }
 
 base {
-    archivesName = "${mod_id}-${version}-${project.name}-${minecraft_version}"
+    archivesName = "${mod_id}-${version}-${project.name}-${project.findProperty('target_label') ?: minecraft_version}"
 }
 
 java {
@@ -38,7 +38,7 @@ java {
 }
 
 tasks.withType(Jar).configureEach {
-    from(rootProject.file('LICENSE')) {
+    from(rootProject.file('../../LICENSE')) {
         rename { "${it}_${mod_name}" }
     }
 }
@@ -71,7 +71,7 @@ processResources {
             'mod_id'                       : mod_id,
             'license'                      : license,
             'description'                  : project.description,
-            'neoforge_version'             : neoforge_version,
+            'neoforge_version'             : project.findProperty('neoforge_version') ?: '',
             'credits'                      : credits,
             'java_version'                 : java_version,
             'cloth_config_version'         : cloth_config_version,

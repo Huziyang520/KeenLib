@@ -116,6 +116,12 @@ public final class KeenClothScreen {
     }
 
     private static AbstractConfigListEntry buildEntry(ConfigEntryBuilder entries, KeenConfigEntry<?> entry) {
+        AbstractConfigListEntry built = buildWidget(entries, entry);
+        built.setEditable(entry.enabled());
+        return built;
+    }
+
+    private static AbstractConfigListEntry buildWidget(ConfigEntryBuilder entries, KeenConfigEntry<?> entry) {
         switch (entry.kind()) {
             case BOOLEAN: {
                 KeenConfigEntry<Boolean> typed = (KeenConfigEntry<Boolean>) entry;
@@ -137,6 +143,18 @@ public final class KeenClothScreen {
                     slider.setTooltip(typed.tooltip().toArray(new Component[0]));
                 }
                 return slider.build();
+            }
+            case DOUBLE: {
+                KeenConfigEntry<Double> typed = (KeenConfigEntry<Double>) entry;
+                var field = entries.startDoubleField(typed.label(), typed.get())
+                        .setDefaultValue(typed.defaultValue())
+                        .setMin(typed.minDecimal())
+                        .setMax(typed.maxDecimal())
+                        .setSaveConsumer(typed::set);
+                if (!typed.tooltip().isEmpty()) {
+                    field.setTooltip(typed.tooltip().toArray(new Component[0]));
+                }
+                return field.build();
             }
             default: {
                 KeenConfigEntry<String> typed = (KeenConfigEntry<String>) entry;
