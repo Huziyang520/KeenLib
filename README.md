@@ -87,7 +87,7 @@ Notices are sent **locally on the client**, so client-only mods can use them too
 
 ### License
 
-Released under [CC0 1.0 Universal](LICENSE).
+Released under [CC0 1.0 Universal](https://github.com/Huziyang520/KeenLib/blob/26.X/LICENSE).
 
 ---
 
@@ -176,4 +176,4 @@ KeenNoticeApi.register(
 
 ### 许可证
 
-本项目基于 [CC0 1.0 Universal](LICENSE) 发布。
+本项目基于 [CC0 1.0 Universal](https://github.com/Huziyang520/KeenLib/blob/26.X/LICENSE) 发布。
