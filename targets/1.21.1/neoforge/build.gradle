@@ -1,0 +1,47 @@
+plugins {
+    id 'multiloader-common'
+    id 'net.neoforged.moddev'
+}
+
+sourceSets.main.java.setSrcDirs([rootProject.file('../../common/src/main/java'),
+                                 rootProject.file('../../neoforge/src/main/java')])
+sourceSets.main.resources.setSrcDirs([rootProject.file('../../common/src/main/resources'),
+                                      rootProject.file('../../neoforge/src/main/resources')])
+
+dependencies {
+    compileOnly("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}") { transitive = false }
+}
+
+repositories {
+    maven {
+        name = 'Shedaniel'
+        url = uri('https://maven.shedaniel.me/')
+    }
+}
+
+neoForge {
+    version = project.neoforge_version
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
+    configurations.matching { it.name == variant }.configureEach {
+        attributes {
+            attribute(loaderAttribute, 'neoforge')
+        }
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant ->
+        configurations.matching { it.name == variant }.configureEach {
+            attributes {
+                attribute(loaderAttribute, 'neoforge')
+            }
+        }
+    }
+}
