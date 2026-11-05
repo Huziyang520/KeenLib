@@ -23,3 +23,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}") { transitive = false }
 }
+
+// FG6 不会自动把 jar 接到 reobfJar 上；漏了这步产物里还是 mojmap 名，运行期报 NoSuchMethodError
+tasks.named('jar') {
+    finalizedBy 'reobfJar'
+}
