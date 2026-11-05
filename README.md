@@ -1,6 +1,6 @@
 # KeenLib
 
-> A shared library for Huziyang520's Minecraft 26.3 mods · Fabric + NeoForge
+> A shared library for Huziyang520's Minecraft mods · Fabric + NeoForge
 
 KeenLib provides functions on **both the client and the server**, and may be **installed on the client only**. It extracts the boilerplate Huziyang520's mods would otherwise repeat: loader platform abstraction, JSON config handling, a business-mod config registry with an **optional Cloth Config screen**, GUI helpers (including the "ESC means save" abstraction), localization utilities with fallbacks, and a **join-notice library** for chat messages.
 
@@ -26,10 +26,10 @@ KeenLib provides functions on **both the client and the server**, and may be **i
 
 ### Optional integrations (never required)
 
-| Mod | Version | What it adds | Behaviour when absent |
-|---|---|---|---|
-| **Cloth Config API** | `26.3.159` | The config screen itself | No config screen; all other features keep working |
-| **Mod Menu** (Fabric only) | `21.0.0` | A "Config" button in the Fabric mod list | On Fabric, no in-game entry to the config screen |
+| Mod | What it adds | Behaviour when absent |
+|---|---|---|
+| **Cloth Config API** | The config screen itself | No config screen; all other features keep working |
+| **Mod Menu** (Fabric only) | A "Config" button in the Fabric mod list | On Fabric, no in-game entry to the config screen |
 
 Neither is declared as a dependency (`depends`); both are `compileOnly` at build time and checked at runtime.
 
@@ -37,20 +37,14 @@ Neither is declared as a dependency (`depends`); both are `compileOnly` at build
 
 | Item | Value |
 |---|---|
-| Minecraft | 26.3 (`[26.3, 26.4)`) |
-| Loaders | Fabric Loader `0.19.5` / NeoForge `26.3.0.1-beta` |
-| Fabric API | `0.160.5+26.3` |
-| Java | 25 |
 | Side | **Client & server** (may be installed client-side only) |
 | Dependencies | None |
-| Optional | Cloth Config `26.3.159`, Mod Menu `21.0.0` (Fabric) |
+| Optional | Cloth Config, Mod Menu (Fabric) |
 
 ### Installation
 
-1. Install a Minecraft 26.3 instance with the matching loader.
-2. Put the jar for your loader into the instance `mods` folder:
-   - Fabric: `keenlib-0.3.0-fabric-26.3.jar`
-   - NeoForge: `keenlib-0.3.0-neoforge-26.3.jar`
+1. Install a Minecraft instance with the loader this build targets (see the file name).
+2. Put the jar for your loader into the instance `mods` folder.
 3. Optional: install **Cloth Config** to get a config screen, plus **Mod Menu** on Fabric for a config button.
 
 ### For Developers — config
@@ -115,10 +109,10 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 
 ### 可选联动（都不是依赖）
 
-| 模组 | 版本 | 作用 | 未安装时 |
-|---|---|---|---|
-| **Cloth Config API** | `26.3.159` | 配置界面本体 | 没有配置界面，其余功能照常 |
-| **Mod Menu**（仅 Fabric） | `21.0.0` | Fabric 模组列表里的「配置」按钮 | Fabric 侧没有打开配置界面的入口 |
+| 模组 | 作用 | 未安装时 |
+|---|---|---|
+| **Cloth Config API** | 配置界面本体 | 没有配置界面，其余功能照常 |
+| **Mod Menu**（仅 Fabric） | Fabric 模组列表里的「配置」按钮 | Fabric 侧没有打开配置界面的入口 |
 
 两者都不写进 `depends`：构建期 `compileOnly`，运行期检测。
 
@@ -126,20 +120,14 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 
 | 项 | 值 |
 |---|---|
-| Minecraft | 26.3（`[26.3, 26.4)`） |
-| 加载器 | Fabric Loader `0.19.5` / NeoForge `26.3.0.1-beta` |
-| Fabric API | `0.160.5+26.3` |
-| Java | 25 |
 | 运行环境 | **客户端与服务端**（允许仅客户端安装） |
 | 前置依赖 | 无 |
-| 可选联动 | Cloth Config `26.3.159`、Mod Menu `21.0.0`（Fabric） |
+| 可选联动 | Cloth Config、Mod Menu（Fabric） |
 
 ### 安装
 
-1. 安装对应加载器版本的 Minecraft 26.3 实例。
-2. 把对应加载器端的 jar 放入实例 `mods` 目录：
-   - Fabric：`keenlib-0.3.0-fabric-26.3.jar`
-   - NeoForge：`keenlib-0.3.0-neoforge-26.3.jar`
+1. 安装与本构建对应的 Minecraft 实例（版本见文件名）。
+2. 把对应加载器端的 jar 放入实例 `mods` 目录。
 3. 可选：装 **Cloth Config** 以获得配置界面；Fabric 端可再装 **Mod Menu** 获得配置入口。
 
 ### 面向开发者 —— 配置
