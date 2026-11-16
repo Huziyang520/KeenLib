@@ -6,7 +6,6 @@ import com.huziyang520.keenlib.config.KeenConfig;
 import com.huziyang520.keenlib.config.KeenConfigEntry;
 import com.huziyang520.keenlib.config.KeenConfigMigration;
 import com.huziyang520.keenlib.config.KeenLabelKeys;
-import com.huziyang520.keenlib.neoforge.client.NeoForgeScreenBridge;
 import com.huziyang520.keenlib.platform.Services;
 import com.huziyang520.keenlib.platform.services.IConfigSpecHelper;
 import com.huziyang520.keenlib.platform.services.SpecBinding;
@@ -56,9 +55,6 @@ public final class NeoForgeConfigSpecHelper implements IConfigSpecHelper {
             }
             ModConfigSpec spec = builder.build();
             container.registerConfig(ModConfig.Type.CLIENT, spec, fileName);
-            if (Services.PLATFORM.isClientSide()) {
-                NeoForgeScreenBridge.install(container);
-            }
             Binding binding = new Binding(spec, values);
             Pending pending = new Pending(binding, config, missing);
             PENDING.put(fileName, pending);
