@@ -27,9 +27,9 @@ public final class KeenConfigScreenHook {
     private KeenConfigScreenHook() {
     }
 
-    /** 是否可用：原生配置界面可用，或装了 Cloth Config。 */
+    /** 是否可用：装了 Cloth Config。业务模组自己的原生屏由各自的 mod 列表条目提供。 */
     public static boolean isAvailable() {
-        return nativeAvailable() || clothAvailable();
+        return clothAvailable();
     }
 
     private static boolean clothAvailable() {
@@ -37,31 +37,13 @@ public final class KeenConfigScreenHook {
                 || Services.PLATFORM.isModLoaded(CLOTH_CONFIG_NEOFORGE_ID);
     }
 
-    private static boolean nativeAvailable() {
-        try {
-            return Services.screenProvider().available();
-        } catch (Throwable ignored) {
-            return false;
-        }
-    }
-
     /**
-     * 创建配置界面：优先原生屏，其次 Cloth 聚合屏。
+     * 创建 KeenLib 自己的配置界面（聚合视图）。
      *
      * @param parent 父界面
-     * @return 配置界面；两者都不可用时返回 {@code null}
+     * @return 配置界面；未安装 Cloth Config 时返回 {@code null}
      */
     public static Screen create(Screen parent) {
-        if (nativeAvailable()) {
-            try {
-                Screen screen = Services.screenProvider().create(parent);
-                if (screen != null) {
-                    return screen;
-                }
-            } catch (Throwable ignored) {
-                Constants.LOG.debug("Native config screen unavailable, falling back");
-            }
-        }
         if (!clothAvailable()) {
             return null;
         }
