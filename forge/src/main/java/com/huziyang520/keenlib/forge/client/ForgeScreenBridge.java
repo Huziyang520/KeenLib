@@ -1,10 +1,8 @@
 package com.huziyang520.keenlib.forge.client;
 
 import com.huziyang520.keenlib.platform.Services;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModContainer;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 
 /**
  * Attaches the ported NeoForge configuration screen to one mod container.
@@ -30,27 +28,28 @@ public final class ForgeScreenBridge {
         if (container == null) {
             return;
         }
-        container.addConfig(new net.minecraftforge.fml.config.ModConfig(
-                net.minecraftforge.fml.config.ModConfig.Type.CLIENT, spec, container, "keenlib-client.toml"));
+        net.minecraftforge.fml.config.ModConfig ownConfig = new net.minecraftforge.fml.config.ModConfig(
+                net.minecraftforge.fml.config.ModConfig.Type.CLIENT, spec, container, "keenlib-client.toml");
+        container.addConfig(ownConfig);
         if (!Services.PLATFORM.isModLoaded(PORT_ID)) {
             return;
         }
         container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory(
-                        (minecraft, parent) -> create(container, parent)));
-        com.huziyang520.keenlib.client.KeenConfigScreenHook.install(parent -> create(container, parent));
+                        (minecraft, parent) -> aggregate(container, ownConfig, parent)));
+        com.huziyang520.keenlib.client.KeenConfigScreenHook.install(
+                parent -> aggregate(container, ownConfig, parent));
     }
 
-    public static void install(ModContainer container) {
-        if (!Services.PLATFORM.isModLoaded(PORT_ID)) {
-            return;
+    private static net.minecraft.client.gui.screens.Screen aggregate(ModContainer container,
+                                                                    net.minecraftforge.fml.config.ModConfig config,
+                                                                    net.minecraft.client.gui.screens.Screen parent) {
+        try {
+            return new com.huziyang520.keenlib.client.KeenAggregateScreen(parent, config);
+        } catch (Throwable t) {
+            com.huziyang520.keenlib.Constants.LOG.error("Aggregate screen failed", t);
+            return new net.neoforged.neoforge.client.gui.ConfigurationScreen(container, parent);
         }
-        container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory(
-                        (minecraft, parent) -> create(container, parent)));
     }
 
-    public static Screen create(ModContainer container, Screen parent) {
-        return new ConfigurationScreen(container, parent);
-    }
 }

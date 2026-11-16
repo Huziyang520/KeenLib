@@ -6,7 +6,6 @@ import com.huziyang520.keenlib.config.KeenConfig;
 import com.huziyang520.keenlib.config.KeenConfigEntry;
 import com.huziyang520.keenlib.config.KeenConfigMigration;
 import com.huziyang520.keenlib.config.KeenLabelKeys;
-import com.huziyang520.keenlib.forge.client.ForgeScreenBridge;
 import com.huziyang520.keenlib.platform.Services;
 import com.huziyang520.keenlib.platform.services.IConfigSpecHelper;
 import com.huziyang520.keenlib.platform.services.SpecBinding;
@@ -56,9 +55,6 @@ public final class ForgeConfigSpecHelper implements IConfigSpecHelper {
             }
             ForgeConfigSpec spec = builder.build();
             container.addConfig(new ModConfig(ModConfig.Type.CLIENT, spec, container, fileName));
-            if (Services.PLATFORM.isClientSide()) {
-                ForgeScreenBridge.install(container);
-            }
             Binding binding = new Binding(spec, values);
             PENDING.put(fileName, new Pending(binding, config, missing));
             return binding;
