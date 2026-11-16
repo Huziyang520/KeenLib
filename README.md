@@ -15,7 +15,7 @@ KeenLib provides functions on **both the client and the server**, and may be **i
 | Platform abstraction | `platform.Services.PLATFORM` / `platform.services.IPlatformHelper` | Unified Fabric / NeoForge differences via `ServiceLoader`: platform name, mod-loaded check, dev-environment check, `config` directory |
 | JSON config | `config.KeenConfig` | One instance per mod, reads/writes `config/<modId>.json`; typed `get*` / `set` with fault-tolerant loading |
 | Business config registry | `config.KeenConfigApi` / `KeenBusinessConfig` | Business mods register their own options in a few lines; KeenLib renders them. **No Cloth Config types are used by business mods** |
-| Config screens | `client.KeenConfigScreenHook` | Prefers the loader's **native** configuration screen (NeoForge built-in; on Fabric through Forge Config API Port), which lists one file per business mod and looks the same on every loader. Falls back to a **Cloth Config** screen when the native one is unavailable |
+| Config screens | `client.KeenConfigScreenHook` | Each business mod's own entry in the mod list opens the loader's **native** configuration screen (NeoForge built-in; on Fabric through Forge Config API Port; on 1.20.1 through Neo Configuration Screen Port). KeenLib's own entry keeps a **Cloth Config** overview of every registered mod |
 | Notice settings | `notice.KeenNoticePreferences` | Per-mod on/off for join notices, edited from the config screen, stored in `config/keenlib.json` |
 | Languages | `assets/keenlib/lang` | The config screen is fully localized (`en_us`, `zh_cn`); business mods supply their own keys |
 | GUI helpers | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | Shared abstraction for "ESC saves and exits", reused by feature mods via Mixin |
@@ -46,7 +46,7 @@ Neither is declared as a dependency (`depends`); both are `compileOnly` at build
 
 1. Install a Minecraft instance with the loader this build targets (see the file name).
 2. Put the jar for your loader into the instance `mods` folder.
-3. Optional: on Fabric install **Forge Config API Port** for the native config screen (NeoForge needs nothing extra). **Cloth Config** is only the fallback screen, and **Mod Menu** (Fabric) adds the button in the mod list.
+3. Optional: on Fabric install **Forge Config API Port** and on 1.20.1 **Neo Configuration Screen Port** for the native config screens (NeoForge needs nothing extra). **Cloth Config** gives KeenLib's own overview screen, and **Mod Menu** (Fabric) adds the button in the mod list.
 
 ### For Developers — config
 
@@ -103,7 +103,7 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 | 平台抽象 | `platform.Services.PLATFORM` / `platform.services.IPlatformHelper` | 用 ServiceLoader 统一 Fabric / NeoForge 差异：平台名、模组加载判定、开发环境判定、`config` 目录 |
 | JSON 配置 | `config.KeenConfig` | 每个模组一个实例，读写 `config/<modId>.json`；带类型化 `get*` / `set` 与容错加载 |
 | 业务配置注册 | `config.KeenConfigApi` / `KeenBusinessConfig` | 业务模组几行代码即可登记自己的选项，由 KeenLib 负责渲染；**业务模组不使用任何 Cloth Config 类型** |
-| 配置界面 | `client.KeenConfigScreenHook` | 优先用加载器**原生**配置界面（NeoForge 自带；Fabric 经 Forge Config API Port），每个业务模组一个文件、各分支观感一致；原生屏不可用时退回 **Cloth Config** 界面 |
+| 配置界面 | `client.KeenConfigScreenHook` | 每个业务模组自己的模组列表条目打开加载器**原生**配置界面（NeoForge 自带；Fabric 经 Forge Config API Port；1.20.1 经 Neo Configuration Screen Port）；KeenLib 自己的条目保留 **Cloth Config** 的总览界面 |
 | 通知开关 | `notice.KeenNoticePreferences` | 每个模组的进入世界提示开关，在配置界面里改，存 `config/keenlib.json` |
 | 多语言 | `assets/keenlib/lang` | 配置界面文案全部走语言键（内置 `en_us` / `zh_cn`）；业务模组提供自己的键 |
 | GUI 辅助 | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | 「ESC 即保存并退出」的统一抽象，供功能模组以 Mixin 复用 |
@@ -134,7 +134,7 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 
 1. 安装与本构建对应的 Minecraft 实例（版本见文件名）。
 2. 把对应加载器端的 jar 放入实例 `mods` 目录。
-3. 可选：Fabric 端装 **Forge Config API Port** 以获得原生配置界面（NeoForge 端无需额外前置）；**Cloth Config** 只作兜底界面，**Mod Menu**（Fabric）提供模组列表里的配置按钮。
+3. 可选：Fabric 端装 **Forge Config API Port**、1.20.1 装 **Neo Configuration Screen Port** 以获得原生配置界面（NeoForge 端无需额外前置）；**Cloth Config** 提供 KeenLib 自己的总览界面，**Mod Menu**（Fabric）提供模组列表里的配置按钮。
 
 ### 面向开发者 —— 配置
 

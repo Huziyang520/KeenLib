@@ -6,6 +6,7 @@ import com.huziyang520.keenlib.config.KeenConfig;
 import com.huziyang520.keenlib.config.KeenConfigEntry;
 import com.huziyang520.keenlib.config.KeenConfigMigration;
 import com.huziyang520.keenlib.config.KeenLabelKeys;
+import com.huziyang520.keenlib.neoforge.client.NeoForgeScreenBridge;
 import com.huziyang520.keenlib.platform.Services;
 import com.huziyang520.keenlib.platform.services.IConfigSpecHelper;
 import com.huziyang520.keenlib.platform.services.SpecBinding;
@@ -42,9 +43,9 @@ public final class NeoForgeConfigSpecHelper implements IConfigSpecHelper {
     @Override
     public SpecBinding register(KeenBusinessConfig config, String fileName) {
         try {
-            ModContainer container = ModList.get().getModContainerById(Constants.MOD_ID).orElse(null);
+            ModContainer container = ModList.get().getModContainerById(config.modId()).orElse(null);
             if (container == null) {
-                Constants.LOG.error("No mod container for {}; config {} stays JSON", Constants.MOD_ID, fileName);
+                Constants.LOG.error("No mod container for {}; config {} stays JSON", config.modId(), fileName);
                 return null;
             }
             boolean missing = !Files.exists(Services.PLATFORM.getConfigDir().resolve(fileName));
@@ -55,6 +56,9 @@ public final class NeoForgeConfigSpecHelper implements IConfigSpecHelper {
             }
             ModConfigSpec spec = builder.build();
             container.registerConfig(ModConfig.Type.CLIENT, spec, fileName);
+            if (Services.PLATFORM.isClientSide()) {
+                NeoForgeScreenBridge.install(container);
+            }
             Binding binding = new Binding(spec, values);
             Pending pending = new Pending(binding, config, missing);
             PENDING.put(fileName, pending);
@@ -86,11 +90,13 @@ public final class NeoForgeConfigSpecHelper implements IConfigSpecHelper {
             builder.translation(labelKey);
         }
         String key = entry.key();
+        // The primitive overloads return BooleanValue / IntValue / DoubleValue; the generic one returns a plain
+        // ConfigValue, which the native screen renders as an unsupported element.
         switch (entry.kind()) {
-            case BOOLEAN -> values.put(key, builder.define(key, (Boolean) entry.defaultValue()));
-            case INT -> values.put(key, builder.defineInRange(key, (Integer) entry.defaultValue(),
+            case BOOLEAN -> values.put(key, builder.define(key, ((Boolean) entry.defaultValue()).booleanValue()));
+            case INT -> values.put(key, builder.defineInRange(key, ((Integer) entry.defaultValue()).intValue(),
                     entry.min(), entry.max()));
-            case DOUBLE -> values.put(key, builder.defineInRange(key, (Double) entry.defaultValue(),
+            case DOUBLE -> values.put(key, builder.defineInRange(key, ((Double) entry.defaultValue()).doubleValue(),
                     entry.minDecimal(), entry.maxDecimal()));
             default -> values.put(key, builder.define(key, (String) entry.defaultValue()));
         }

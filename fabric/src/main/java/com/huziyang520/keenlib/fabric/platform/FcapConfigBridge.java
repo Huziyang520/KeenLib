@@ -6,6 +6,7 @@ import com.huziyang520.keenlib.config.KeenConfig;
 import com.huziyang520.keenlib.config.KeenConfigEntry;
 import com.huziyang520.keenlib.config.KeenConfigMigration;
 import com.huziyang520.keenlib.config.KeenLabelKeys;
+import com.huziyang520.keenlib.fabric.client.FcapScreenBridge;
 import com.huziyang520.keenlib.platform.Services;
 import com.huziyang520.keenlib.platform.services.SpecBinding;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
@@ -34,7 +35,10 @@ final class FcapConfigBridge {
             define(builder, entry, values);
         }
         ModConfigSpec spec = builder.build();
-        ConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.CLIENT, spec, fileName);
+        ConfigRegistry.INSTANCE.register(config.modId(), ModConfig.Type.CLIENT, spec, fileName);
+        if (Services.PLATFORM.isClientSide()) {
+            FcapScreenBridge.install(config.modId());
+        }
         Binding binding = new Binding(spec, values);
         if (missing && spec.isLoaded()) {
             KeenConfigMigration.importJson(KeenConfig.create(config.modId()), config.entries(), binding);
@@ -53,11 +57,13 @@ final class FcapConfigBridge {
             builder.translation(labelKey);
         }
         String key = entry.key();
+        // The primitive overloads return BooleanValue / IntValue / DoubleValue; the generic one returns a plain
+        // ConfigValue, which the native screen renders as an unsupported element.
         switch (entry.kind()) {
-            case BOOLEAN -> values.put(key, builder.define(key, (Boolean) entry.defaultValue()));
-            case INT -> values.put(key, builder.defineInRange(key, (Integer) entry.defaultValue(),
+            case BOOLEAN -> values.put(key, builder.define(key, ((Boolean) entry.defaultValue()).booleanValue()));
+            case INT -> values.put(key, builder.defineInRange(key, ((Integer) entry.defaultValue()).intValue(),
                     entry.min(), entry.max()));
-            case DOUBLE -> values.put(key, builder.defineInRange(key, (Double) entry.defaultValue(),
+            case DOUBLE -> values.put(key, builder.defineInRange(key, ((Double) entry.defaultValue()).doubleValue(),
                     entry.minDecimal(), entry.maxDecimal()));
             default -> values.put(key, builder.define(key, (String) entry.defaultValue()));
         }
