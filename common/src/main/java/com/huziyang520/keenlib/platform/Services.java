@@ -1,7 +1,6 @@
 package com.huziyang520.keenlib.platform;
 
 import com.huziyang520.keenlib.Constants;
-import com.huziyang520.keenlib.client.IConfigScreenProvider;
 import com.huziyang520.keenlib.platform.services.IConfigSpecHelper;
 import com.huziyang520.keenlib.platform.services.IPlatformHelper;
 import com.huziyang520.keenlib.platform.services.IRegistryHelper;
@@ -15,18 +14,6 @@ public class Services {
     public static final IRegistryHelper REGISTRY = load(IRegistryHelper.class);
 
     public static final IConfigSpecHelper CONFIG_SPEC = load(IConfigSpecHelper.class);
-
-    private static IConfigScreenProvider screenProvider;
-
-    /**
-     * Client-only service, resolved on first use so the server never links a {@code Screen} type.
-     */
-    public static synchronized IConfigScreenProvider screenProvider() {
-        if (screenProvider == null) {
-            screenProvider = load(IConfigScreenProvider.class);
-        }
-        return screenProvider;
-    }
 
     public static <T> T load(Class<T> clazz) {
 
