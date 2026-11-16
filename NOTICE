@@ -1,0 +1,8 @@
+NOTICE
+
+This mod bundles Camelot (mod id: camelot), a shared runtime library maintained
+by the same author: https://github.com/Huziyang520/Camelot
+
+Camelot is licensed under the MIT License. Its licence text travels inside the
+nested jar as LICENSE and applies to that component only; the source of this
+mod itself remains under the licence declared in LICENSE.

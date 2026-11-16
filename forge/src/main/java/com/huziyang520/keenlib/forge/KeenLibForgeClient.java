@@ -2,6 +2,8 @@ package com.huziyang520.keenlib.forge;
 
 import com.huziyang520.keenlib.Constants;
 import com.huziyang520.keenlib.client.KeenConfigScreenHook;
+import com.huziyang520.keenlib.forge.client.ForgeScreenProvider;
+import com.huziyang520.keenlib.forge.client.PortScreenBridge;
 import com.huziyang520.keenlib.notice.KeenNoticeDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.ConfigScreenHandler;
@@ -19,7 +21,9 @@ public final class KeenLibForgeClient {
     }
 
     public static void init(ModLoadingContext context) {
-        if (KeenConfigScreenHook.isAvailable()) {
+        if (com.huziyang520.keenlib.platform.Services.PLATFORM.isModLoaded(ForgeScreenProvider.PORT_ID)) {
+            PortScreenBridge.register();
+        } else if (KeenConfigScreenHook.isAvailable()) {
             context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                     () -> new ConfigScreenHandler.ConfigScreenFactory(
                             (minecraft, parent) -> KeenConfigScreenHook.create(parent)));

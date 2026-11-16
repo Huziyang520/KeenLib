@@ -22,6 +22,29 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}") { transitive = false }
+    def portJar = rootProject.file('../../libs/neoconfigurationscreenport-0.7.0-forge-1.20.1.jar')
+    if (portJar.exists()) {
+        compileOnly(files(portJar))
+    }
+}
+
+def camelotJar = rootProject.file('../../libs/camelot-loader.jar')
+
+// Nested jars are added by hand so the plain file dependency needs no module name.
+if (camelotJar.exists()) {
+    tasks.named('jar') {
+        from(camelotJar) {
+            into 'META-INF/jarjar'
+            rename { 'camelot.jar' }
+        }
+    }
+    tasks.named('processResources') {
+        doLast {
+            def metadata = destinationDir.toPath().resolve('META-INF/jarjar/metadata.json').toFile()
+            metadata.parentFile.mkdirs()
+            metadata.text = '''{"jars":[{"identifier":{"group":"com.camelot","artifact":"camelot-forge-1.20-1.20.1"},"version":{"range":"[1.0.0,)","artifactVersion":"1.0.0"},"path":"META-INF/jarjar/camelot.jar","isObfuscated":false}]}'''
+        }
+    }
 }
 
 // FG6 不会自动把 jar 接到 reobfJar 上；漏了这步产物里还是 mojmap 名，运行期报 NoSuchMethodError
