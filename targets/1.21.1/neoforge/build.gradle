@@ -12,6 +12,25 @@ dependencies {
     compileOnly("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}") { transitive = false }
 }
 
+def camelotJar = rootProject.file('../../libs/camelot-loader.jar')
+
+// Nested jars are added by hand: jarJar rejects a plain file dependency that has no module name.
+if (camelotJar.exists()) {
+    tasks.named('jar') {
+        from(camelotJar) {
+            into 'META-INF/jarjar'
+            rename { 'camelot.jar' }
+        }
+    }
+    tasks.named('processResources') {
+        doLast {
+            def metadata = destinationDir.toPath().resolve('META-INF/jarjar/metadata.json').toFile()
+            metadata.parentFile.mkdirs()
+            metadata.text = '''{"jars":[{"identifier":{"group":"com.camelot","artifact":"camelot-neoforge-1.21-1.21.1"},"version":{"range":"[1.0.0,)","artifactVersion":"1.0.0"},"path":"META-INF/jarjar/camelot.jar","isObfuscated":false}]}'''
+        }
+    }
+}
+
 repositories {
     maven {
         name = 'Shedaniel'

@@ -1,5 +1,6 @@
 package com.huziyang520.keenlib.client;
 
+import com.huziyang520.keenlib.Constants;
 import com.huziyang520.keenlib.platform.Services;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -26,20 +27,42 @@ public final class KeenConfigScreenHook {
     private KeenConfigScreenHook() {
     }
 
-    /** 是否安装了 Cloth Config（两端 id 都检查）。 */
+    /** 是否可用：原生配置界面可用，或装了 Cloth Config。 */
     public static boolean isAvailable() {
+        return nativeAvailable() || clothAvailable();
+    }
+
+    private static boolean clothAvailable() {
         return Services.PLATFORM.isModLoaded(CLOTH_CONFIG_FABRIC_ID)
                 || Services.PLATFORM.isModLoaded(CLOTH_CONFIG_NEOFORGE_ID);
     }
 
+    private static boolean nativeAvailable() {
+        try {
+            return Services.screenProvider().available();
+        } catch (Throwable ignored) {
+            return false;
+        }
+    }
+
     /**
-     * 创建配置界面。
+     * 创建配置界面：优先原生屏，其次 Cloth 聚合屏。
      *
      * @param parent 父界面
-     * @return 配置界面；未安装 Cloth Config 时返回 {@code null}
+     * @return 配置界面；两者都不可用时返回 {@code null}
      */
     public static Screen create(Screen parent) {
-        if (!isAvailable()) {
+        if (nativeAvailable()) {
+            try {
+                Screen screen = Services.screenProvider().create(parent);
+                if (screen != null) {
+                    return screen;
+                }
+            } catch (Throwable ignored) {
+                Constants.LOG.debug("Native config screen unavailable, falling back");
+            }
+        }
+        if (!clothAvailable()) {
             return null;
         }
         return com.huziyang520.keenlib.client.cloth.KeenClothScreen.build(parent);

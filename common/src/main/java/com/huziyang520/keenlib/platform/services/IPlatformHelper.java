@@ -33,4 +33,16 @@ public interface IPlatformHelper {
 
         return isDevelopmentEnvironment() ? "development" : "production";
     }
+
+    /**
+     * Whether this process is a client. Defaults to a class probe; loaders override with their own check.
+     */
+    default boolean isClientSide() {
+        try {
+            Class.forName("net.minecraft.client.Minecraft");
+            return true;
+        } catch (Throwable ignored) {
+            return false;
+        }
+    }
 }
