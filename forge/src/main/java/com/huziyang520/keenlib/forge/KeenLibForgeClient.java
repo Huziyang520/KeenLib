@@ -10,26 +10,16 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 
-/**
- * Forge 1.20.1 的客户端侧：配置界面入口 + 进入世界提示的 tick 派发（用事件代替客户端 Mixin）。
- */
 public final class KeenLibForgeClient {
 
     private KeenLibForgeClient() {
     }
 
     public static void init(ModLoadingContext context) {
-        if (KeenConfigScreenHook.isAvailable()) {
-            context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-                    () -> new ConfigScreenHandler.ConfigScreenFactory(
-                            (minecraft, parent) -> KeenConfigScreenHook.create(parent)));
-        } else {
-            Constants.LOG.debug("Cloth Config not installed; KeenLib config screen is unavailable");
-        }
+        com.huziyang520.keenlib.forge.client.ForgeScreenBridge.registerOwnConfig(context);
         MinecraftForge.EVENT_BUS.register(ClientTicks.class);
     }
 
-    /** 客户端 tick 钩子：检测「进入世界」并派发聊天框提示。 */
     public static final class ClientTicks {
 
         private ClientTicks() {

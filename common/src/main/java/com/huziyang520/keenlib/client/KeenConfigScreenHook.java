@@ -1,52 +1,34 @@
 package com.huziyang520.keenlib.client;
 
-import com.huziyang520.keenlib.Constants;
-import com.huziyang520.keenlib.platform.Services;
 import net.minecraft.client.gui.screens.Screen;
 
 /**
- * 配置界面的入口守卫。
+ * Entry point for KeenLib's own configuration screen.
  *
- * <p>Cloth Config 是**可选联动**（不是依赖）：未安装时本类照常可用，但 {@link #create(Screen)} 返回
- * {@code null}，即“没有配置界面”。引用 Cloth Config 的代码只在与
- * {@link com.huziyang520.keenlib.client.cloth.KeenClothScreen} 相关的分支里，未安装时不会被加载。
+ * <p>The screen is the loader's native one; each loader installs a factory during client setup.
  */
 public final class KeenConfigScreenHook {
 
-    /**
-     * Cloth Config 的 mod id。
-     *
-     * <p>**两端不一样**：Fabric 上是 `cloth-config`，NeoForge 上因 NeoForge 的 modId 不允许连字符而是
-     * `cloth_config`。只按其中一个判断会导致另一端「装了也认不出来」。
-     */
-    public static final String CLOTH_CONFIG_FABRIC_ID = "cloth-config";
+    /** Creates the native screen for KeenLib's own config file. */
+    @FunctionalInterface
+    public interface Factory {
+        Screen create(Screen parent);
+    }
 
-    /** NeoForge 侧的 Cloth Config mod id。 */
-    public static final String CLOTH_CONFIG_NEOFORGE_ID = "cloth_config";
+    private static Factory factory;
 
     private KeenConfigScreenHook() {
     }
 
-    /** 是否可用：装了 Cloth Config。业务模组自己的原生屏由各自的 mod 列表条目提供。 */
+    public static void install(Factory screenFactory) {
+        factory = screenFactory;
+    }
+
     public static boolean isAvailable() {
-        return clothAvailable();
+        return factory != null;
     }
 
-    private static boolean clothAvailable() {
-        return Services.PLATFORM.isModLoaded(CLOTH_CONFIG_FABRIC_ID)
-                || Services.PLATFORM.isModLoaded(CLOTH_CONFIG_NEOFORGE_ID);
-    }
-
-    /**
-     * 创建 KeenLib 自己的配置界面（聚合视图）。
-     *
-     * @param parent 父界面
-     * @return 配置界面；未安装 Cloth Config 时返回 {@code null}
-     */
     public static Screen create(Screen parent) {
-        if (!clothAvailable()) {
-            return null;
-        }
-        return com.huziyang520.keenlib.client.cloth.KeenClothScreen.build(parent);
+        return factory == null ? null : factory.create(parent);
     }
 }

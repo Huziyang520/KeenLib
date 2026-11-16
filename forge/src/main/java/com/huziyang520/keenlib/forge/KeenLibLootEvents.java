@@ -11,9 +11,6 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-/**
- * Forge 1.20.1 用 LootTableLoadEvent 挂额外掉落，避免依赖 Mixin 与 refmap。
- */
 public final class KeenLibLootEvents {
 
     private KeenLibLootEvents() {

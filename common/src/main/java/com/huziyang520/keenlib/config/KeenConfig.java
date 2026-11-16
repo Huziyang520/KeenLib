@@ -16,10 +16,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 轻量 JSON 配置封装：每个模组一个实例，读写实例 config 目录下的单个 JSON 文件。
- * 用法：KeenConfig.create("mymod")，读取用 get 系列方法，写入用 set 系列方法，最后 save()。
- */
 public final class KeenConfig {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -36,12 +32,6 @@ public final class KeenConfig {
 
     private static final Map<Path, KeenConfig> CACHE = new HashMap<>();
 
-    /**
-     * 加载（或创建）{@code <config目录>/<modId>.json}。文件缺失或损坏时返回空配置，损坏会记录日志但不会抛出。
-     *
-     * <p><b>同一路径只返回同一个实例</b>：否则不同调用方各自持有一份内存副本，界面改了 A 副本、业务代码读 B 副本，
-     * 就会出现「改了值却不生效 / 重新打开又变回去」的问题。
-     */
     public static synchronized KeenConfig create(String modId) {
 
         Path file = Services.PLATFORM.getConfigDir().resolve(modId + ".json");
@@ -143,7 +133,6 @@ public final class KeenConfig {
         root.remove(key);
     }
 
-    /** 将当前配置写回磁盘。写入失败只记录日志。 */
     public void save() {
 
         SpecBinding binding = KeenConfigBindings.get(modId);

@@ -14,9 +14,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-/**
- * Forge 1.20.1 的 RegistryObject 不是 Holder，这里包一层：第一次取值时才从注册表解析真正的 Holder。
- */
 final class LazyHolder<T> implements Holder<T> {
 
     private final Supplier<Holder<T>> resolver;

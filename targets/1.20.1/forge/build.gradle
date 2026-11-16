@@ -21,7 +21,6 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}") { transitive = false }
     def portJar = rootProject.file('../../libs/neoconfigurationscreenport-0.7.0-forge-1.20.1.jar')
     if (portJar.exists()) {
         compileOnly(files(portJar))

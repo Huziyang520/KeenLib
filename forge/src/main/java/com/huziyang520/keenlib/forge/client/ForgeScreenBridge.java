@@ -19,6 +19,28 @@ public final class ForgeScreenBridge {
     private ForgeScreenBridge() {
     }
 
+    /** Registers KeenLib's own config file and points its mod list entry at the ported screen. */
+    public static void registerOwnConfig(net.minecraftforge.fml.ModLoadingContext context) {
+        net.minecraftforge.common.ForgeConfigSpec.Builder builder = new net.minecraftforge.common.ForgeConfigSpec.Builder();
+        builder.translation("gui.keenlib.notices.enable");
+        builder.define("notices_enabled", true);
+        net.minecraftforge.common.ForgeConfigSpec spec = builder.build();
+        ModContainer container = net.minecraftforge.fml.ModList.get()
+                .getModContainerById(com.huziyang520.keenlib.Constants.MOD_ID).orElse(null);
+        if (container == null) {
+            return;
+        }
+        container.addConfig(new net.minecraftforge.fml.config.ModConfig(
+                net.minecraftforge.fml.config.ModConfig.Type.CLIENT, spec, container, "keenlib-client.toml"));
+        if (!Services.PLATFORM.isModLoaded(PORT_ID)) {
+            return;
+        }
+        container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new ConfigScreenHandler.ConfigScreenFactory(
+                        (minecraft, parent) -> create(container, parent)));
+        com.huziyang520.keenlib.client.KeenConfigScreenHook.install(parent -> create(container, parent));
+    }
+
     public static void install(ModContainer container) {
         if (!Services.PLATFORM.isModLoaded(PORT_ID)) {
             return;
@@ -28,7 +50,7 @@ public final class ForgeScreenBridge {
                         (minecraft, parent) -> create(container, parent)));
     }
 
-    private static Screen create(ModContainer container, Screen parent) {
+    public static Screen create(ModContainer container, Screen parent) {
         return new ConfigurationScreen(container, parent);
     }
 }

@@ -6,15 +6,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-/**
- * 一条配置项的描述，**与任何界面库无关**（不出现 Cloth Config 类型）。
- * 业务模组只描述“键、标签、默认值、读写方式”，由 KeenLib 在检测到 Cloth Config 时渲染成界面。
- *
- * @param <T> 值类型
- */
 public final class KeenConfigEntry<T> {
 
-    /** 支持的控件类型。 */
     public enum Kind {
         BOOLEAN,
         INT,
@@ -97,7 +90,6 @@ public final class KeenConfigEntry<T> {
         return getter.get();
     }
 
-    /** 写入当前值（只改内存，落盘由保存动作统一完成）。 */
     public void set(T value) {
         setter.accept(value);
     }
@@ -126,7 +118,6 @@ public final class KeenConfigEntry<T> {
         this.enabled = rule;
     }
 
-    /** 键不存在时把默认值写进配置文件。 */
     void writeDefaultIfAbsent(KeenConfig file) {
         if (file.has(key)) {
             return;

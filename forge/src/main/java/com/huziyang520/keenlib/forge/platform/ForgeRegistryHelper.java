@@ -21,9 +21,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * Forge 1.20.1 没有数据组件，component(...) 能力在本线不提供。
- */
 public class ForgeRegistryHelper implements IRegistryHelper {
 
     private final Map<String, ModRegisters> registers = new HashMap<>();
