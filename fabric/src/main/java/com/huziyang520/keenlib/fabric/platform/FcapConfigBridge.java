@@ -6,7 +6,6 @@ import com.huziyang520.keenlib.config.KeenConfig;
 import com.huziyang520.keenlib.config.KeenConfigEntry;
 import com.huziyang520.keenlib.config.KeenConfigMigration;
 import com.huziyang520.keenlib.config.KeenLabelKeys;
-import com.huziyang520.keenlib.fabric.client.FcapScreenBridge;
 import com.huziyang520.keenlib.platform.Services;
 import com.huziyang520.keenlib.platform.services.SpecBinding;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
@@ -36,9 +35,6 @@ final class FcapConfigBridge {
         }
         ModConfigSpec spec = builder.build();
         ConfigRegistry.INSTANCE.register(config.modId(), ModConfig.Type.CLIENT, spec, fileName);
-        if (Services.PLATFORM.isClientSide()) {
-            FcapScreenBridge.install(config.modId());
-        }
         Binding binding = new Binding(spec, values);
         if (missing && spec.isLoaded()) {
             KeenConfigMigration.importJson(KeenConfig.create(config.modId()), config.entries(), binding);

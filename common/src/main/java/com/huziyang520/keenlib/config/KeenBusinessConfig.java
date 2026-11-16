@@ -1,8 +1,6 @@
 package com.huziyang520.keenlib.config;
 
-import com.huziyang520.keenlib.notice.KeenNoticePreferences;
 import com.huziyang520.keenlib.platform.Services;
-import com.huziyang520.keenlib.text.KeenText;
 import com.huziyang520.keenlib.platform.services.SpecBinding;
 import net.minecraft.network.chat.Component;
 
@@ -85,17 +83,7 @@ public final class KeenBusinessConfig {
         file.save();
     }
 
-    /** Adds the join-notice switch so it shows up on this mod's own config screen. */
-    public KeenBusinessConfig noticeToggle() {
-        entries.add(KeenConfigEntry.bool(KeenNoticePreferences.KEY,
-                KeenText.trans("gui.keenlib.notices.enable", "Enable join notices"), true, List.of(),
-                () -> KeenNoticePreferences.isEnabled(modId, true),
-                value -> KeenNoticePreferences.setEnabled(modId, value)));
-        return this;
-    }
-
     public void submit() {
-        noticeToggle();
         SpecBinding binding = Services.CONFIG_SPEC.register(this, modId + "-client.toml");
         if (binding != null) {
             KeenConfigBindings.bind(modId, binding);
