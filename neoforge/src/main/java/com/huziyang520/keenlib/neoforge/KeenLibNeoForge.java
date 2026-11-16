@@ -2,6 +2,7 @@ package com.huziyang520.keenlib.neoforge;
 
 import com.huziyang520.keenlib.Constants;
 import com.huziyang520.keenlib.KeenLib;
+import com.huziyang520.keenlib.neoforge.platform.NeoForgeConfigSpecHelper;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -17,6 +18,7 @@ public class KeenLibNeoForge {
 
         Constants.LOG.debug("KeenNeoForge constructor");
         KeenLib.init();
+        NeoForgeConfigSpecHelper.install(eventBus);
         if (isClient()) {
             KeenLibNeoForgeClient.registerConfigScreen(container);
         }

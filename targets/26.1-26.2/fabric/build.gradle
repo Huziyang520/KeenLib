@@ -14,6 +14,29 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
     implementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
     compileOnly("com.terraformersmc:modmenu:${modmenu_version}") { transitive = false }
+    compileOnly(files(rootProject.file('../../libs/fcap/forgeconfigapiport-fabric-26.1.5.jar')))
+}
+
+def camelotJar = rootProject.file('../../libs/camelot-fabric-26.1-26.2.jar')
+
+// Nested jars are added by hand: Loom's include rejects a plain file dependency.
+if (camelotJar.exists()) {
+    tasks.named('jar') {
+        from(camelotJar) {
+            into 'META-INF/jars'
+            rename { 'camelot.jar' }
+        }
+    }
+    tasks.named('processResources') {
+        doLast {
+            def target = destinationDir.toPath().resolve('fabric.mod.json').toFile()
+            if (target.exists()) {
+                def json = new groovy.json.JsonSlurper().parse(target)
+                json.jars = [[file: 'META-INF/jars/camelot.jar']]
+                target.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(json))
+            }
+        }
+    }
 }
 
 loom {

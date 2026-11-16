@@ -15,7 +15,7 @@ KeenLib provides functions on **both the client and the server**, and may be **i
 | Platform abstraction | `platform.Services.PLATFORM` / `platform.services.IPlatformHelper` | Unified Fabric / NeoForge differences via `ServiceLoader`: platform name, mod-loaded check, dev-environment check, `config` directory |
 | JSON config | `config.KeenConfig` | One instance per mod, reads/writes `config/<modId>.json`; typed `get*` / `set` with fault-tolerant loading |
 | Business config registry | `config.KeenConfigApi` / `KeenBusinessConfig` | Business mods register their own options in a few lines; KeenLib renders them. **No Cloth Config types are used by business mods** |
-| Config screen (optional) | `client.KeenConfigScreenHook` | Renders everything with **Cloth Config** when installed. Two categories: **Business mod notice settings** (per-mod join-notice switches) and **Client-side business mod settings** (each mod's own options). Without Cloth Config there is simply no config screen |
+| Config screens | `client.KeenConfigScreenHook` | Prefers the loader's **native** configuration screen (NeoForge built-in; on Fabric through Forge Config API Port), which lists one file per business mod and looks the same on every loader. Falls back to a **Cloth Config** screen when the native one is unavailable |
 | Notice settings | `notice.KeenNoticePreferences` | Per-mod on/off for join notices, edited from the config screen, stored in `config/keenlib.json` |
 | Languages | `assets/keenlib/lang` | The config screen is fully localized (`en_us`, `zh_cn`); business mods supply their own keys |
 | GUI helpers | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | Shared abstraction for "ESC saves and exits", reused by feature mods via Mixin |
@@ -30,6 +30,7 @@ KeenLib provides functions on **both the client and the server**, and may be **i
 |---|---|---|
 | **Cloth Config API** | The config screen itself | No config screen; all other features keep working |
 | **Mod Menu** (Fabric only) | A "Config" button in the Fabric mod list | On Fabric, no in-game entry to the config screen |
+| **Forge Config API Port** (Fabric only) | The native configuration screen and the config backend behind it | The Cloth Config screen, or no config screen |
 
 Neither is declared as a dependency (`depends`); both are `compileOnly` at build time and checked at runtime.
 
@@ -39,13 +40,13 @@ Neither is declared as a dependency (`depends`); both are `compileOnly` at build
 |---|---|
 | Side | **Client & server** (may be installed client-side only) |
 | Dependencies | None |
-| Optional | Cloth Config, Mod Menu (Fabric) |
+| Optional | Cloth Config, Mod Menu (Fabric), Forge Config API Port (Fabric) |
 
 ### Installation
 
 1. Install a Minecraft instance with the loader this build targets (see the file name).
 2. Put the jar for your loader into the instance `mods` folder.
-3. Optional: install **Cloth Config** to get a config screen, plus **Mod Menu** on Fabric for a config button.
+3. Optional: on Fabric install **Forge Config API Port** for the native config screen (NeoForge needs nothing extra). **Cloth Config** is only the fallback screen, and **Mod Menu** (Fabric) adds the button in the mod list.
 
 ### For Developers — config
 
@@ -57,7 +58,7 @@ KeenConfigApi.business("mymod", "My Mod")
         .booleanToggle("enabled", true,
                 Component.literal("Enable feature"),
                 Component.literal("Tooltip line"))
-        .submit();   // writes defaults into config/mymod.json
+        .submit();   // registers the options; values live in config/mymod-client.toml
 ```
 
 The option then appears under **KeenLib → 纯客户端业务模组 → My Mod** in the config screen.
@@ -72,6 +73,10 @@ KeenNoticeApi.register(
 ```
 
 Notices are sent **locally on the client**, so client-only mods can use them too. `ONCE_PER_WORLD` remembers each world save / server address in `config/keenlib/notices.json`.
+
+### Bundled library
+
+The jar also ships **Camelot**, a shared runtime library maintained by the same author (MIT). See `NOTICE`.
 
 ### Links
 
@@ -98,7 +103,7 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 | 平台抽象 | `platform.Services.PLATFORM` / `platform.services.IPlatformHelper` | 用 ServiceLoader 统一 Fabric / NeoForge 差异：平台名、模组加载判定、开发环境判定、`config` 目录 |
 | JSON 配置 | `config.KeenConfig` | 每个模组一个实例，读写 `config/<modId>.json`；带类型化 `get*` / `set` 与容错加载 |
 | 业务配置注册 | `config.KeenConfigApi` / `KeenBusinessConfig` | 业务模组几行代码即可登记自己的选项，由 KeenLib 负责渲染；**业务模组不使用任何 Cloth Config 类型** |
-| 配置界面（可选） | `client.KeenConfigScreenHook` | 装了 **Cloth Config** 时渲染界面。左侧两个分类：**业务模组通知设置**（各模组的进入世界提示开关）与**纯客户端业务模组启用设置**（各模组自己的选项）；不装则没有配置界面 |
+| 配置界面 | `client.KeenConfigScreenHook` | 优先用加载器**原生**配置界面（NeoForge 自带；Fabric 经 Forge Config API Port），每个业务模组一个文件、各分支观感一致；原生屏不可用时退回 **Cloth Config** 界面 |
 | 通知开关 | `notice.KeenNoticePreferences` | 每个模组的进入世界提示开关，在配置界面里改，存 `config/keenlib.json` |
 | 多语言 | `assets/keenlib/lang` | 配置界面文案全部走语言键（内置 `en_us` / `zh_cn`）；业务模组提供自己的键 |
 | GUI 辅助 | `gui.AutoSaveScreen` / `gui.KeenScreenHelper` | 「ESC 即保存并退出」的统一抽象，供功能模组以 Mixin 复用 |
@@ -113,6 +118,7 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 |---|---|---|
 | **Cloth Config API** | 配置界面本体 | 没有配置界面，其余功能照常 |
 | **Mod Menu**（仅 Fabric） | Fabric 模组列表里的「配置」按钮 | Fabric 侧没有打开配置界面的入口 |
+| **Forge Config API Port**（仅 Fabric） | 原生配置界面与其配置后端 | 退回 Cloth Config 界面，或没有界面 |
 
 两者都不写进 `depends`：构建期 `compileOnly`，运行期检测。
 
@@ -122,13 +128,13 @@ KeenLib 是 Huziyang520 系列模组共用的**通用共享库**，在**客户�
 |---|---|
 | 运行环境 | **客户端与服务端**（允许仅客户端安装） |
 | 前置依赖 | 无 |
-| 可选联动 | Cloth Config、Mod Menu（Fabric） |
+| 可选联动 | Cloth Config、Mod Menu（Fabric）、Forge Config API Port（Fabric） |
 
 ### 安装
 
 1. 安装与本构建对应的 Minecraft 实例（版本见文件名）。
 2. 把对应加载器端的 jar 放入实例 `mods` 目录。
-3. 可选：装 **Cloth Config** 以获得配置界面；Fabric 端可再装 **Mod Menu** 获得配置入口。
+3. 可选：Fabric 端装 **Forge Config API Port** 以获得原生配置界面（NeoForge 端无需额外前置）；**Cloth Config** 只作兜底界面，**Mod Menu**（Fabric）提供模组列表里的配置按钮。
 
 ### 面向开发者 —— 配置
 
@@ -140,7 +146,7 @@ KeenConfigApi.business("mymod", "My Mod")
         .booleanToggle("enabled", true,
                 Component.literal("启用功能"),
                 Component.literal("提示文字"))
-        .submit();   // 把默认值写入 config/mymod.json
+        .submit();   // 登记选项；值落在 config/mymod-client.toml
 ```
 
 之后该选项会出现在配置界面的 **KeenLib → 纯客户端业务模组 → My Mod** 二级菜单中。
@@ -155,6 +161,10 @@ KeenNoticeApi.register(
 ```
 
 提示由**客户端本地发送**，因此纯客户端模组也能使用；`ONCE_PER_WORLD` 会按世界（存档名 / 服务器地址）记录在 `config/keenlib/notices.json`。
+
+### 内置库
+
+本 jar 同时内置 **Camelot**（同作者维护的共享运行库，MIT 许可），详见 `NOTICE`。
 
 ### 链接
 

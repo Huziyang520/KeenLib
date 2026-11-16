@@ -1,5 +1,7 @@
 package com.huziyang520.keenlib.config;
 
+import com.huziyang520.keenlib.platform.Services;
+import com.huziyang520.keenlib.platform.services.SpecBinding;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -105,6 +107,11 @@ public final class KeenBusinessConfig {
 
     /** 补齐缺失的默认值并写回磁盘。 */
     public void submit() {
+        SpecBinding binding = Services.CONFIG_SPEC.register(this, modId + "-client.toml");
+        if (binding != null) {
+            KeenConfigBindings.bind(modId, binding);
+            return;
+        }
         for (KeenConfigEntry<?> entry : entries) {
             entry.writeDefaultIfAbsent(file);
         }
