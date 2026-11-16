@@ -6,5 +6,9 @@
   "gui.keenlib.notices.enable": "Enable join notices",
   "gui.keenlib.notices.enable.tooltip": "When off, this mod's messages are not shown when you enter a world.",
   "gui.keenlib.business.none": "No client-side mod depends on KeenLib.",
-  "modmenu.keenlib.backup": "Backup feedback"
+  "modmenu.keenlib.backup": "Backup feedback",
+  "gui.keenlib.entry.notice": "Join notices",
+  "gui.keenlib.entry.notice.tip": "Show this mod's message when joining a world.",
+  "gui.keenlib.on": "On",
+  "gui.keenlib.off": "Off"
 }
