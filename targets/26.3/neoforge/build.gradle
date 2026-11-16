@@ -9,7 +9,6 @@ sourceSets.main.resources.setSrcDirs([rootProject.file('../../common/src/main/re
                                       rootProject.file('../../neoforge/src/main/resources')])
 
 dependencies {
-    compileOnly("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}") { transitive = false }
 
 def camelotJar = rootProject.file('../../libs/camelot-neoforge-26.3.jar')
 

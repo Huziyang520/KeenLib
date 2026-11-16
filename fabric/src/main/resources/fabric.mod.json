@@ -26,7 +26,6 @@
         ]
     },
     "recommends": {
-        "cloth-config": "*",
         "modmenu": "*",
         "forgeconfigapiport": "*"
     },
