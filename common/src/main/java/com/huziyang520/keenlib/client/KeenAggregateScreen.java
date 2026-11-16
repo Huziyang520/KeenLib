@@ -12,17 +12,14 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * KeenLib's own configuration screen: the loader's native one, extended with rows that do not come from a spec.
- *
- * <p>Two groups: the join-notice switch of every registered mod, and the client options of every business mod.
- */
+/** KeenLib's own configuration screen: the loader's native one plus rows that no spec owns. */
 public final class KeenAggregateScreen extends ConfigurationScreen.ConfigurationSectionScreen {
 
     public KeenAggregateScreen(Screen parent, ModConfig config) {
@@ -34,16 +31,48 @@ public final class KeenAggregateScreen extends ConfigurationScreen.Configuration
         List<Element> rows = new ArrayList<>();
         for (String owner : KeenNoticeApi.owners()) {
             rows.add(new Element(
-                    KeenText.trans("gui.keenlib.notices.enable", "Enable join notices"),
-                    KeenText.trans("gui.keenlib.notices.owner", "Applies to: %s", owner),
+                    prefix(modName(owner), KeenText.trans("gui.keenlib.entry.notice", "Join notices")),
+                    KeenText.trans("gui.keenlib.entry.notice.tip", "Show this mod's message when joining a world"),
                     noticeToggle(owner), null, false));
         }
         for (KeenBusinessConfig business : KeenConfigApi.businesses()) {
             for (KeenConfigEntry<?> entry : business.entries()) {
-                rows.add(new Element(entry.label(), null, widget(business, entry), null, false));
+                rows.add(new Element(prefix(business.displayName(), labelOf(entry)), tooltipOf(entry),
+                        widget(business, entry), null, false));
             }
         }
         return rows;
+    }
+
+    private static Component modName(String modId) {
+        KeenBusinessConfig config = KeenConfigApi.find(modId);
+        return config == null ? KeenText.literal(modId) : config.displayName();
+    }
+
+    private static Component labelOf(KeenConfigEntry<?> entry) {
+        return entry.label() == null ? KeenText.literal(entry.key()) : entry.label();
+    }
+
+    private static Component prefix(Component owner, Component label) {
+        MutableComponent line = owner.copy();
+        line.append(KeenText.literal(" · "));
+        line.append(label);
+        return line;
+    }
+
+    private static Component tooltipOf(KeenConfigEntry<?> entry) {
+        List<Component> lines = entry.tooltip();
+        if (lines == null || lines.isEmpty()) {
+            return Component.empty();
+        }
+        MutableComponent joined = Component.empty();
+        for (int i = 0; i < lines.size(); i++) {
+            if (i > 0) {
+                joined.append(Component.literal(String.valueOf((char) 10)));
+            }
+            joined.append(lines.get(i));
+        }
+        return joined;
     }
 
     private AbstractWidget noticeToggle(String owner) {
@@ -66,27 +95,31 @@ public final class KeenAggregateScreen extends ConfigurationScreen.Configuration
 
     @SuppressWarnings("unchecked")
     private AbstractWidget widget(KeenBusinessConfig business, KeenConfigEntry<?> entry) {
+        AbstractWidget widget;
         if (entry.kind() == KeenConfigEntry.Kind.BOOLEAN) {
             KeenConfigEntry<Boolean> typed = (KeenConfigEntry<Boolean>) entry;
-            return onOff(typed.get(), value -> {
+            widget = onOff(typed.get(), value -> {
                 typed.set(value);
                 business.file().save();
             });
-        }
-        KeenConfigEntry<Object> typed = (KeenConfigEntry<Object>) entry;
-        EditBox box = new EditBox(this.font, 0, 0, 150, 20, Component.empty());
-        box.setValue(String.valueOf(entry.get()));
-        box.setResponder(text -> {
-            try {
-                switch (entry.kind()) {
-                    case INT -> typed.set(Integer.parseInt(text.trim()));
-                    case DOUBLE -> typed.set(Double.parseDouble(text.trim()));
-                    default -> typed.set(text);
+        } else {
+            KeenConfigEntry<Object> typed = (KeenConfigEntry<Object>) entry;
+            EditBox box = new EditBox(this.font, 0, 0, 150, 20, Component.empty());
+            box.setValue(String.valueOf(typed.get()));
+            box.setResponder(text -> {
+                try {
+                    switch (entry.kind()) {
+                        case INT -> typed.set(Integer.parseInt(text.trim()));
+                        case DOUBLE -> typed.set(Double.parseDouble(text.trim()));
+                        default -> typed.set(text);
+                    }
+                    business.file().save();
+                } catch (RuntimeException ignored) {
                 }
-                business.file().save();
-            } catch (RuntimeException ignored) {
-            }
-        });
-        return box;
+            });
+            widget = box;
+        }
+        widget.active = entry.enabled();
+        return widget;
     }
 }
